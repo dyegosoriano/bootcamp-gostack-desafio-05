@@ -12,6 +12,22 @@ export default class Main extends Component {
     loading: false,
   };
 
+  // Carregar os dados do localStorage
+  componentDidMount(prevProps, prevState) {
+    const repositories = localStorage.getItem('repositories');
+    if (repositories) {
+      this.setState({ repositories: JSON.parse(repositories) });
+    }
+  }
+
+  // Salvar os dados no localStorage
+  componentDidUpdate(prevProps, prevState) {
+    const { repositories } = this.state;
+    if (prevState.repositories !== repositories) {
+      localStorage.setItem('repositories', JSON.stringify(repositories));
+    }
+  }
+
   hadleSubmit = async (event) => {
     event.preventDefault();
 
