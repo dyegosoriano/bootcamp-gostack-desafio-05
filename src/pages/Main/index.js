@@ -14,6 +14,7 @@ export default class Main extends Component {
       newRepo: '',
       repositories: [],
       loading: false,
+      error: null,
     };
   }
 
@@ -38,15 +39,21 @@ export default class Main extends Component {
 
     this.setState({ loading: true });
 
-    const { newRepo, repositories } = this.state;
-    const response = await api.get(`/repos/${newRepo}`);
-    const data = { name: response.data.full_name };
+    try {
+      const { newRepo, repositories } = this.state;
+      const response = await api.get(`/repos/${newRepo}`);
+      const data = { name: response.data.full_name };
 
-    this.setState({
-      repositories: [...repositories, data],
-      newRepo: '',
-      loading: false,
-    });
+      this.setState({
+        repositories: [...repositories, data],
+        newRepo: '',
+        error: false,
+      });
+    } catch (error) {
+      this.setState({ error: true });
+    } finally {
+      this.setState({ loading: false });
+    }
   };
 
   hadleInputChange = (event) => {
@@ -65,6 +72,7 @@ export default class Main extends Component {
 
         <Form onSubmit={this.hadleSubmit}>
           <input
+            error={this.error}
             type="text"
             placeholder="Adicionar repositótio"
             value={newRepo}
