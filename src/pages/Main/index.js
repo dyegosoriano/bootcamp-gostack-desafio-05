@@ -8,14 +8,17 @@ import Container from '../../components/Container';
 import { Form, SubmitButton, List } from './styles';
 
 export default class Main extends Component {
-  state = {
-    newRepo: '',
-    repositories: [],
-    loading: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      newRepo: '',
+      repositories: [],
+      loading: false,
+    };
+  }
 
   // Carregar os dados do localStorage
-  componentDidMount(prevProps, prevState) {
+  componentDidMount() {
     const repositories = localStorage.getItem('repositories');
     if (repositories) {
       this.setState({ repositories: JSON.parse(repositories) });

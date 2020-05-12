@@ -82,9 +82,9 @@ export const IssueList = styled.ul`
         }
         span {
           height: 20px;
-          background: #eee;
-          color: #333;
-          border: 3px;
+          background: #7159c1;
+          color: #fff;
+          border-radius: 3px;
           font-size: 12px;
           font-weight: 600;
           padding: 3px 4px;
@@ -95,7 +95,7 @@ export const IssueList = styled.ul`
       p {
         margin-top: 5px;
         font-size: 12px;
-        color: #999;
+        color: #fff;
       }
     }
   }
