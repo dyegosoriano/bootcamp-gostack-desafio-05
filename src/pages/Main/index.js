@@ -61,7 +61,7 @@ export default class Main extends Component {
   };
 
   render() {
-    const { newRepo, loading, repositories } = this.state;
+    const { newRepo, loading, repositories, error } = this.state;
 
     return (
       <Container>
@@ -70,9 +70,8 @@ export default class Main extends Component {
           Repositórios
         </h1>
 
-        <Form onSubmit={this.hadleSubmit}>
+        <Form onSubmit={this.hadleSubmit} error={error}>
           <input
-            error={this.error}
             type="text"
             placeholder="Adicionar repositótio"
             value={newRepo}
