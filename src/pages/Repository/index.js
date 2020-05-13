@@ -7,16 +7,17 @@ import Container from '../../components/Container';
 import { Loading, Owner, IssueList } from './styles';
 
 export default class Repository extends Component {
-  static propTypes = {
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        repository: PropTypes.string,
-      }),
-    }).isRequired,
-  };
-
   constructor(props) {
     super(props);
+
+    Repository.propTypes = {
+      match: PropTypes.shape({
+        params: PropTypes.shape({
+          repository: PropTypes.string,
+        }),
+      }).isRequired,
+    };
+
     this.state = {
       repository: {},
       issues: [],
