@@ -15,11 +15,14 @@ export default class Repository extends Component {
     }).isRequired,
   };
 
-  state = {
-    repository: {},
-    issues: [],
-    loading: true,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      repository: {},
+      issues: [],
+      loading: true,
+    };
+  }
 
   async componentDidMount() {
     const { match } = this.props;
