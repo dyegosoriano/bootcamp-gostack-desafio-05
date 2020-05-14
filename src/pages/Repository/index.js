@@ -4,7 +4,13 @@ import PropTypes from 'prop-types';
 import api from '../../services/api';
 
 import Container from '../../components/Container';
-import { Loading, Owner, IssueList } from './styles';
+import {
+  Loading,
+  Owner,
+  IssueList,
+  IssueFilter,
+  BoxPagination,
+} from './styles';
 
 export default class Repository extends Component {
   constructor(props) {
@@ -22,6 +28,13 @@ export default class Repository extends Component {
       repository: {},
       issues: [],
       loading: true,
+      filterIndex: 0,
+      page: 1,
+      filters: [
+        { state: 'all', label: 'Todas', active: true },
+        { state: 'open', label: 'Abertas', active: false },
+        { state: 'close', label: 'Fechadas', active: false },
+      ],
     };
   }
 
@@ -46,8 +59,38 @@ export default class Repository extends Component {
     });
   }
 
+  // Função responsável por carregar as Issues
+  loadIssues = async () => {
+    const { match } = this.props;
+    const { filters, filterIndex, page } = this.state;
+
+    const repoName = decodeURIComponent(match.params.repository);
+    const response = await api.get(`/repos/${repoName}/issues`, {
+      params: {
+        state: filters[filterIndex].state,
+        per_page: 5,
+        page,
+      },
+    });
+
+    this.setState({ issues: response.data });
+  };
+
+  // Função responsável pela filtragem
+  handleClick = (filterIndex) => {
+    this.setState({ filterIndex });
+    this.loadIssues();
+  };
+
+  // Função responsável pela paginação
+  handlePage = (action) => {
+    const { page } = this.state;
+    this.setState({ page: action === 'back' ? page - 1 : page + 1 });
+    this.loadIssues();
+  };
+
   render() {
-    const { repository, issues, loading } = this.state;
+    const { repository, issues, loading, filters } = this.state;
 
     if (loading) return <Loading>Carregando</Loading>;
 
@@ -61,6 +104,18 @@ export default class Repository extends Component {
         </Owner>
 
         <IssueList>
+          <IssueFilter>
+            {filters.map((filter, index) => (
+              <button
+                type="button"
+                key={filter.label}
+                onClick={() => this.handleClick(index)}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </IssueFilter>
+
           {issues.map((issue) => (
             <li key={String(issue.id)}>
               <img src={issue.user.avatar_url} alt={issue.user.login} />
@@ -75,6 +130,15 @@ export default class Repository extends Component {
               </div>
             </li>
           ))}
+
+          <BoxPagination>
+            <button type="button" onClick={() => this.handlePage('back')}>
+              Previous
+            </button>
+            <button type="button" onClick={() => this.handlePage('next')}>
+              Next
+            </button>
+          </BoxPagination>
         </IssueList>
       </Container>
     );
